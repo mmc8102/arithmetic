@@ -1,26 +1,18 @@
-package cn.mmc8102.tree.binarysearchtree;
+package cn.mmc8102.tree;
 
-import cn.mmc8102.tree.binarysearchtree.printer.BinaryTreeInfo;
+import cn.mmc8102.tree.printer.BinaryTreeInfo;
 
-import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.Queue;
 
 /**
  * @author wangli
- * @Date: 2021/8/15 19:49
+ * @Date: 2021/8/29 10:34
+ * 二叉树
  */
-public class BinarySearchTree<E> implements BinaryTreeInfo {
-    private int size;
-    private Node<E> root;
-    private Comparator comparator;
-
-    public BinarySearchTree() {
-    }
-
-    public BinarySearchTree(Comparator comparator) {
-        this.comparator = comparator;
-    }
+public class BinaryTree<E> implements BinaryTreeInfo {
+    protected int size;
+    protected Node<E> root;
 
     public int size(){
         return size;
@@ -31,145 +23,18 @@ public class BinarySearchTree<E> implements BinaryTreeInfo {
     }
 
     public void clear(){
-
+        root = null;
+        size = 0;
     }
 
-    public void add(E element){
-        elementNotNullCheck(element);
-        //如果根节点为空 初始化
-        if(root == null){
-            root = new Node<>(element, null);
-            size++;
-            return;
-        }
-
-        //查找父节点
-        Node<E> parent = root;
-        Node<E> node = root;
-        int cmp = 0;
-        while (node != null){
-            cmp = compare(element, node.element);
-            parent = node;
-            if(cmp > 0){
-                node = node.right;
-            }else if(cmp < 0){
-                node = node.left;
-            }else{
-                node.element = element;
-            }
-        }
-        //看看插入到父节点哪个位置
-        Node<E> newNode = new Node<>(element, parent);
-        if(cmp > 0){
-            parent.right = newNode;
-        }else{
-            parent.left = newNode;
-        }
-        size++;
-    }
-
-    private int compare(E e1, E e2){
-        if(comparator != null){
-            return comparator.compare(e1, e2);
-        }
-        return ((Comparable)e1).compareTo(e2);
-    }
-
-    public void remove(E element){
-
-    }
-
-    public boolean contains(E element){
-        return false;
-    }
-
-    public void elementNotNullCheck(E element){
-        if(element == null){
-            throw new IllegalArgumentException("element must not be null");
-        }
-    }
-
-//    /**
-//     * 前序遍历
-//     */
-//    public void preorderTraversal(){
-//        preorderTraversal(root);
-//    }
-//
-//    public void preorderTraversal(Node<E> node){
-//        if(node == null){
-//            return;
-//        }
-//        System.out.println(node.element);
-//        preorderTraversal(node.left);
-//        preorderTraversal(node.right);
-//    }
-//
-//    /**
-//     * 中序遍历
-//     */
-//    public void inorderTraversal(){
-//        inorderTraversal(root);
-//    }
-//
-//    public void inorderTraversal(Node<E> node){
-//        if(node == null){
-//            return;
-//        }
-//        inorderTraversal(node.left);
-//        System.out.println(node.element);
-//        inorderTraversal(node.right);
-//    }
-//
-//    /**
-//     * 后序遍历
-//     */
-//    public void postorderTraversal(){
-//        postorderTraversal(root);
-//    }
-//
-//    public void postorderTraversal(Node<E> node){
-//        if(node == null){
-//            return;
-//        }
-//        postorderTraversal(node.left);
-//        postorderTraversal(node.right);
-//        System.out.println(node.element);
-//    }
-//
-//    /**
-//     * 层序遍历
-//     */
-//    public void levelOrderTraversal(){
-//        levelOrderTraversal(root);
-//    }
-//
-//    public void levelOrderTraversal(Node<E> node){
-//        if(node == null){
-//            return;
-//        }
-//        Queue<Node<E>> queue = new LinkedList<>();
-//        queue.offer(node);
-//        while (!queue.isEmpty()){
-//            Node<E> poll = queue.poll();
-//            System.out.println(poll.element);
-//            if(poll.left != null){
-//                queue.offer(poll.left);
-//            }
-//            if(poll.right != null){
-//                queue.offer(poll.right);
-//            }
-//        }
-//    }
-
-    public void preorder(Visitor visitor){
+    public void preorder(BST.Visitor visitor){
         if(visitor == null){
             return;
         }
         preorder(root, visitor);
     }
 
-    public void preorder(Node<E> node, Visitor visitor){
+    public void preorder(Node<E> node, BST.Visitor visitor){
         if(root == null || visitor.stop){
             return;
         }
@@ -178,14 +43,14 @@ public class BinarySearchTree<E> implements BinaryTreeInfo {
         preorder(node.right, visitor);
     }
 
-    public void inorder(Visitor visitor){
+    public void inorder(BST.Visitor visitor){
         if(visitor == null){
             return;
         }
         inorder(root, visitor);
     }
 
-    public void inorder(Node<E> node, Visitor visitor){
+    public void inorder(Node<E> node, BST.Visitor visitor){
         if(root == null || visitor.stop){
             return;
         }
@@ -197,14 +62,14 @@ public class BinarySearchTree<E> implements BinaryTreeInfo {
         preorder(node.right, visitor);
     }
 
-    public void postorder(Visitor visitor){
+    public void postorder(BST.Visitor visitor){
         if(visitor == null){
             return;
         }
         postorder(root, visitor);
     }
 
-    public void postorder(Node<E> node, Visitor visitor){
+    public void postorder(Node<E> node, BST.Visitor visitor){
         if(root == null || visitor.stop){
             return;
         }
@@ -216,7 +81,7 @@ public class BinarySearchTree<E> implements BinaryTreeInfo {
         visitor.stop = visitor.visit(node.element);
     }
 
-    public void levelOrder(Visitor visitor){
+    public void levelOrder(BST.Visitor visitor){
         if(root == null || visitor == null){
             return;
         }
@@ -234,6 +99,58 @@ public class BinarySearchTree<E> implements BinaryTreeInfo {
                 queue.offer(node.right);
             }
         }
+    }
+
+
+    /**
+     * 前驱节点
+     * @return
+     */
+    protected Node<E> predecessor(Node<E> node){
+        if(node == null){
+            return null;
+        }
+        if(node.left != null){
+            //前驱节点在左子树中  left.right.right.right...
+            node = node.left;
+            while (node.right != null){
+                node = node.right;
+            }
+        }else {
+            //从父节点 祖父节点中寻找
+            while (node.parent != null && node == node.parent.left){
+                node = node.parent;
+            }
+            node = node.parent;
+        }
+
+        return node;
+    }
+
+
+    /**
+     * 后继节点
+     * @return
+     */
+    protected Node<E> successor(Node<E> node){
+        if(node == null){
+            return null;
+        }
+        if(node.right != null){
+            //后继节点在右子树中  right.left.left.left...
+            node = node.right;
+            while (node.left != null){
+                node = node.left;
+            }
+        }else {
+            //从父节点 祖父节点中寻找
+            while (node.parent != null && node == node.parent.right){
+                node = node.parent;
+            }
+            node = node.parent;
+        }
+
+        return node;
     }
 
     public int height(){
@@ -307,8 +224,20 @@ public class BinarySearchTree<E> implements BinaryTreeInfo {
     }
 
 
+    public static abstract class Visitor<E> {
+        boolean stop;
 
-    private static class Node<E> {
+        /**
+         * 如果返回true,就停止遍历
+         * @param element
+         * @return
+         */
+        boolean visit(E element) {
+            return false;
+        }
+    }
+
+    protected static class Node<E> {
         E element;
         Node<E> left;
         Node<E> right;
@@ -325,19 +254,6 @@ public class BinarySearchTree<E> implements BinaryTreeInfo {
 
         public boolean hasTwoChildren(){
             return left != null && right != null;
-        }
-    }
-
-    public static abstract class Visitor<E> {
-        boolean stop;
-
-        /**
-         * 如果返回true,就停止遍历
-         * @param element
-         * @return
-         */
-        boolean visit(E element) {
-            return false;
         }
     }
 

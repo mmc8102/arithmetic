@@ -1,4 +1,4 @@
-package cn.mmc8102.tree.binarysearchtree.printer;
+package cn.mmc8102.tree.printer;
 
 public class Strings {
 	public static String repeat(String string, int count) {

@@ -1,4 +1,4 @@
-package cn.mmc8102.tree.binarysearchtree.printer;
+package cn.mmc8102.tree.printer;
 
 public abstract class Printer {	
 	/**
